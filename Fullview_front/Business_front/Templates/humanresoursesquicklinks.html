@@ -1,0 +1,218 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'humanresoursesquicklinks.css' %}">
+    <title>Human Resourses</title>
+    <style>
+        .searchbar {
+            width: 25%; /* Adjust as needed */
+        }
+        .table .quicklinktext {
+            display: block;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    {% include "Home.html" %}     
+    <div class="header">
+        <div class="d-flex flex-row mb-3">
+            <div class="shadow top-self">
+                <h6 class="text-center pt-2">Today Request</h6>
+                <div class="">
+                    <div class="d-flex flex-row p-3">
+                        <img src="{% static 'Static-Images/Attendance-Menu-img.png' %}" class="attendance-icon mr-4 mt-1" />
+                        <div class="d-flex flex-column top-self-1">
+                            <div class="d-flex flex-row justify-content-between">
+                                <p>Leave</p>
+                                <p>0</p>
+                            </div>    
+                            <div class="d-flex flex-row justify-content-between">
+                                <p>First Half</p>
+                                <p>0</p>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column ml-4 top-self-2">
+                            <div class="d-flex flex-row justify-content-between">
+                                <p class="">Permission</p>
+                                <p>0</p>
+                            </div>    
+                            <div class="d-flex flex-row justify-content-between">
+                                <p>Second Half</p>
+                                <p>0</p>
+                            </div>
+                        </div>        
+                    </div>   
+                </div>
+            </div>
+            <div class="shadow top-self ml-4">
+                <h6 class="text-center pt-2">Today Attendance</h6>
+                <div class="">
+                    <div class="d-flex flex-row p-3">
+                        <img src="{% static 'Static-Images/Attendance-req-img.png' %}" class="attendance-icon mr-4 mt-1" />
+                        <div class="d-flex flex-column top-self-1">
+                            <div class="d-flex flex-row justify-content-between">
+                                <p>Permission</p>
+                                <p>0</p>
+                            </div>    
+                            <div class="d-flex flex-row justify-content-between">
+                                <p>Casual Leave</p>
+                                <p>0</p>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column ml-4 top-self-2">
+                            <div class="d-flex flex-row justify-content-between">
+                                <p class="">Absent</p>
+                                <p>0</p>
+                            </div>    
+                            <div class="d-flex flex-row justify-content-between">
+                                <p>Sick Leave</p>
+                                <p>0</p>
+                            </div>
+                        </div>        
+                    </div>   
+                </div>
+            </div>
+            <div class="shadow top-self ml-4">
+                <h6 class="text-center pt-2">Upcoming Holiday's</h6>
+                <div class="">
+                    <div class="d-flex flex-row p-3">
+                        <img src="{% static 'Static-Images/Holiday-Menu-img.png' %}" class="attendance-icon mr-4 mt-1" />
+                        <div class="d-flex flex-column top-self-1">
+                            <div class="d-flex flex-row justify-content-between">
+                                <p>-</p>
+                                <p>-</p>
+                            </div>    
+                            <div class="d-flex flex-row justify-content-between">
+                                <p>-</p>
+                                <p>-</p>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column ml-4 top-self-2">
+                            <div class="d-flex flex-row justify-content-between">
+                                <p class="">-</p>
+                                <p>-</p>
+                            </div>    
+                            <div class="d-flex flex-row justify-content-between">
+                                <p>-</p>
+                                <p>-</p>
+                            </div>
+                        </div>        
+                    </div>   
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-row">
+            <div class="shadow p-3 quicklinks">
+                <div class="d-flex flex-row justify-content-between pl-3 pt-1">
+                    <h2 class="quicklinkheading">Quick Links</h2>
+                    <input type="text" class="form-control searchbar" id="menuSearch" placeholder="Search Menu" title="Menu Name" oninput="searchFunction()">
+                </div>
+                <div id="results">
+                    <div class="d-flex flex-row pt-5 pl-1 ml-2">
+                        <div class="col mt-1" id="Attendance_Menu" name="Attendance_Menu">
+                            <a class="quicklinktext quicklinkssize a-highlight p-3" href="{% url 'Attendance' %}">
+                                <img src="{% static 'Static-Images/Attendance-img.png' %}" class="quicklinklogo mr-2 mb-1"/>
+                                Attendance
+                            </a>
+                        </div>
+                        <div class="col" id="Attendance_List_Menu" name="Attendance_List_Menu">
+                            <a class="quicklinktext quicklinkssize a-highlight p-3" href="{% url 'Attendance_sheet' %}">
+                                <img src="{% static 'Static-Images/Attendance-List-img.png' %}" class="quicklinklogo mr-2 mb-1"/>
+                                Attendance List
+                            </a>
+                        </div>
+                        <div class="col" id="Holiday_Menu" name="Holiday_Menu">
+                            <a class="quicklinktext quicklinkssize a-highlight p-3" href="{% url 'Holiday' %}">
+                                <img src="{% static 'Static-Images/Holiday-img.png' %}" class="quicklinklogo mr-2 mb-1"/>
+                                Holiday
+                            </a>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row pt-5 pl-1 ml-2 pb-5" id="Revised_Salary_Menu" name="Revised_Salary_Menu">
+                        <div class="col">
+                            <a class="quicklinktext a-highlight p-3" href="">
+                                <img src="{% static 'Static-Images/Revised-salary-img.png' %}" class="quicklinklogo mr-2"/>
+                                Revised Salary
+                            </a>
+                        </div>
+                        <div class="col" id="Advance_Menu" name="Advance_Menu">
+                            <a class="quicklinktext a-highlight p-3" href="">
+                                <img src="{% static 'Static-Images/Advance-img.png' %}" class="quicklinklogo mr-2"/>
+                                Advance
+                            </a>
+                        </div>
+                        <div class="col" id="Advance_List_Menu" name="Advance_List_Menu">
+                            <a class="quicklinktext a-highlight p-3" href="">
+                                <img src="{% static 'Static-Images/Advance-List-img.png' %}" class="quicklinklogo mr-2"/>
+                                Advance List
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="shadow permission-table">
+                <h6 class="p-3">TODAY'S PERMISSION</h6>
+                <div class="pl-4">
+                    <table class="table table-striped table-bordered">
+                        <tr class="">
+                            <th class="">#</th>
+                            <th class="">EMPLOYEE</th>
+                            <th class="">DATE</th>
+                            <th class="">REQUEST TYPE</th>
+                        </tr>    
+                    </table> 
+                    <p class="text-center">No Request</p>
+                </div>     
+            </div>   
+        </div>    
+    </div>
+    <div class="d-flex flex-row justify-content-start textofcopyrights">
+        <h6 class="p-1 mr-3">Copyright © 2023</h6>
+        <h6 class="p-1">All rights reserved</h6>
+    </div>
+    
+	<script>
+		document.getElementById('sidebarCollapse').addEventListener('click', function() {
+			var sidebar = document.getElementById('sidebar');
+			var header = document.querySelector('.header');
+			
+			// Toggle collapse class
+			sidebar.classList.toggle('collapsed');
+		
+			// 
+			if (sidebar.classList.contains('collapsed')) {
+				header.style.marginLeft = '100px';
+				
+			} else {
+				header.style.marginLeft = '205px';
+               
+			}
+		});
+	</script>
+
+    <script>
+        function searchFunction() {
+            // Get the input field and its value
+            var input = document.getElementById("menuSearch");
+            var filter = input.value.toLowerCase();
+
+            // Get all the links in the results div
+            var links = document.getElementById("results").getElementsByTagName("a");
+
+            // Loop through all links and hide those that don't match the search query
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i];
+                if (link.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                    link.style.display = "";
+                } else {
+                    link.style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" type="text/css" href="{% static 'quicklinksstatestyle.css' %}">
+
+
+
+
+
+<title></title>
+</head>
+<body>
+	{% include "Home.html" %}      		
+    <div class="header">
+      <div class="table shadow">
+         <h3 class="pt-3 pl-3 addstateheading">Add New State:</h3>
+         <div class="">
+            <form class="ml-2" id="form_State_Country" name="form_State_Country" method="POST">
+               {% csrf_token %}
+               <div class="d-flex flex-row justify-content-between">
+                   <div class="col-4">
+                       <label class="statecodeheading">State Code:</label>
+                       <input type="text" id="hiddenstateid" name="hiddenstateid" value="" hidden>
+                       <input type="text" class="State_Code_in form-control ml-3" placeholder="State Code" name="State_Code_in" id="State_Code_in" required>
+                   </div>
+                   <div class="col-5 form-group pr-2 mr-5">
+                       <label class="countryheading pt-1">Country:</label>
+                       <div class="d-flex flex-row">
+                           <select class="form-control form-select Country_Select small-dropdown" id="Select_Country_Name" name="Select_Country_Name">
+                              {% for country in countrylist %}
+                                 <option value="{{ country.id }}">{{ country.Country_name }}</option>
+                              {% endfor %}
+                           </select>
+                           <button class="btn btn-outline-warning p-1" id="add-country">
+                               <img src="{% static 'Static-Images/Plus-icon.png' %}" class="plus-icon a-highlight">
+                           </button>
+                       </div>
+                   </div>
+               </div>
+               <br>
+               <!-- State Name Form Group -->
+               <div class="col-4 form-group ml-2 pb-4 pl-3">
+                   <label class="statenameheading">State Name</label>
+                   <input type="text" class="form-control State_Name_in mb-3 ml-3" placeholder="State Name" name="State_Name" id="State_Name" required>
+                   <div class="ml-3 mt-4">
+                       <button class="btn btn-success text-dark" type="submit">Save</button>
+                       <button class="btn btn-danger text-dark" type="reset">Clear</button>
+                   </div>
+               </div>
+            </form>
+            <div class="mt-4 text-center">
+                {% if messages %}
+                    <ul>
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </ul>
+                {% endif %} 
+            </div>
+        </div>
+    </div>     
+  		<div class="table shadow">
+  			<h3 class="p-3 statelistheading">LIST OF STATES:</h3>
+         <div class="container mb-4">
+            <table id="state-table" name="state-table" class="table table-striped table-bordered text-center">
+               <thead class="table-dark">
+                  <tr>
+                     <th class="text-center S-no">S.No</th>
+                     <th class="text-center state-code-column">State Code</th>
+                     <th class="text-center state-column">State Name</th>
+                     <th class="text-center country-column">Country Name</th>
+                     <th class="text-center actions-column">Actions</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  {% for state in statelist %}
+                        <tr class="record">
+                            <td>{{forloop.counter}}</td>
+                            <td>{{state.State_code}}</td>
+                            <td>{{state.State_name}}</td>
+                            <td>{{state.country_name}}</td>
+                            <td>
+                                <!-- Edit Button -->
+                                <button class="btn btn-sm btn-outline-success mr-4 button-icon edit" name="edit" id="edit"
+                                 onclick="editButton({{state.id}})">
+                                    ✎
+                                </button> 
+                                <!-- Delete Button -->
+                                <button class="btn btn-sm btn-outline-danger button-icon delete" name="delete" id="delete" 
+                                onclick="deleteButton({{state.id}})">
+                                    🗑
+                                </button>
+                            </td>
+                        </tr>
+                  {% endfor %}
+               </tbody>
+            </table>
+         </div>
+      </div>
+      <div class="d-flex flex-row textofcopyrights">
+         <h6 class="p-1 mr-5">Copyright © 2023</h6>
+         <h6 class="p-1 ml-5">All rights reserved</h6>
+      </div>
+   </div>
+    
+   <script>
+        document.getElementById('sidebarCollapse').addEventListener('click', function() {
+            var sidebar = document.getElementById('sidebar');
+            var header = document.querySelector('.header');
+            
+            // Toggle collapse class
+            sidebar.classList.toggle('collapsed');
+        
+            // Adjust the header margin based on the sidebar state
+            if (sidebar.classList.contains('collapsed')) {
+                header.style.marginLeft = '100px'; // Adjust based on collapsed width
+            } else {
+                header.style.marginLeft = '205px'; // Default expanded margin
+            }
+        });
+    </script>
+	
+	<script>
+		$(document).ready(function () {
+    		$('#state-table').DataTable();
+		});
+
+      function editButton(stateId) {
+         alert(stateId);
+         $.ajax({
+             url: `http://127.0.0.1:8001/front/edit_state/?stateid=${stateId}`,
+             type: 'GET',
+             success: function(response) {
+                 if (response.State_code) {
+                     $('#State_Code_in').val(response.State_code);
+                     $('#State_Name').val(response.State_name);
+                     $('#Select_Country_Name').val(response.State_Country);
+                     $('#hiddenstateid').val(response.id);
+                 } else {
+                     alert('State details could not be loaded.');
+                 }
+             },
+             error: function(xhr, status, error) {
+                 console.log('Error:', error);
+                 alert('An error occurred while loading State details.');
+             }
+         });
+     }
+
+      function deleteButton(deleteButton) {
+         alert(deleteButton);
+         if (confirm("Are you sure you want to delete this state?")) {
+            $.ajax({
+               url: `http://127.0.0.1:8001/front/delete_state/?stateid=${deleteButton}`,
+               type: 'GET',
+               success: function(response) {
+                     alert(response.message);
+                     location.reload();
+               },
+               error: function(xhr, status, error) {
+                     console.log('Error:', error);
+                     alert('To delete this State, Delete the corresponding instance which is associated with this state.');
+               }
+            });
+         }
+      }
+
+      $('#add-country').click(function() {
+         window.location.href = '/front/createcountry/'; // Replace with your country page URL
+      });  
+	</script>
+
+
+	
+</body>
+</html>

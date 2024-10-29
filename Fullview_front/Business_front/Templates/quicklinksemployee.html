@@ -1,0 +1,654 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" type="text/css" href="{% static 'quicklinksemployeestyle.css' %}">
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+
+
+   
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <!--
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+
+<title></title>
+</head>
+<body>
+    {% include "Home.html" %} 
+    <div class="header">
+        <div class="table shadow pb-5">
+           <div class="mt-4 text-center">
+               {% if messages %}
+                   <ul>
+                       {% for message in messages %}
+                           {{ message }}
+                       {% endfor %}
+                   </ul>
+               {% endif %} 
+           </div>
+           <div class="p-2">
+               <form method="POST" enctype="multipart/form-data" id="employee_form" class="employee_form">
+               {% csrf_token %} 
+                    <h3 class="Add_employee_heading">ADD NEW EMPLOYEE</h3>
+                    <div class="pl-4 pt-0">
+                       <div>
+                           <div class="collapse-header text-primary d-flex flex-row justify-content-between" data-bs-toggle="collapse" href="#employeeBICollapse" aria-expanded="true" aria-controls="employeeBICollapse">
+                               <h3 class="basic_heading">BASIC INFORMATION</h3>
+                               <span class="toggle-icon" id="toggle-icon">&#x2227;</span> <!-- Unicode for V-shaped up arrow -->
+                           </div>
+                           <div class="row collapse show" id="employeeBICollapse">
+                               <div class="BI-BOX-1 col pl-3 pt-2">
+                                   <div class="bi-box-1">
+                                       <h5 class="bi-headings">Employee Code</h5>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2" name="Employee_Code_in" id="Employee_Code_in" readonly value="{{ employee_code }}" value="{{employee_data.Employee_Code}}">
+                                   </div>
+                                   <div class="bi-box-1">
+                                        <h5 class="bi-headings">Employee Name</h5>
+                                        <input type="text" class="form-control bi-box-in mt-3 ml-2 required-field" name="Employee_name_in" id="Employee_name_in" value="{{ employee_data.Employee_name }}" placeholder="Enter Employee Name" required>
+                                   </div>
+                                   <div class="bi-box-1">
+                                       <h5 class="bi-headings">Date of Birth</h5>
+                                       <input type="date" class="form-control bi-box-in mt-1 ml-2 required-field" name="Date_of_Birth_in" id="Date_of_Birth_in" value="{{ employee_data.Date_of_Birth }}" placeholder="" required>
+                                   </div>									
+                                   <div class="bi-box-1">
+                                        <h5 class="bi-headings">Gender</h5>
+                                        <select class="form-select custom-select mt-3 ml-2 required-field" id="Gender_select_in" name="Gender_select_in" value="{{ employee_data.Gender }}" aria-label="Default select example" required>
+                                           <option value="">Open this select menu</option>
+                                           <option value="1" {% if employee_data.Gender == "1" %}selected{% endif %}>Male</option>
+                                           <option value="2" {% if employee_data.Gender == "2" %}selected{% endif %}>Female</option>
+                                           <option value="3" {% if employee_data.Gender == "3" %}selected{% endif %}>Third Gender</option>
+                                           <option value="4" {% if employee_data.Gender == "4" %}selected{% endif %}>Others</option>
+                                       </select>
+                                   </div>
+                                   <div class="bi-box-1">
+                                        <h5 class="bi-headings">Blood Group</h5>
+                                        <select class="form-select custom-select mt-3 ml-2 required-field" id="Blood_Group_select_in" name="Blood_Group_select_in" value="{{ employee_data.Blood_Group}}"  aria-label="Default select example" required>
+                                           <option value="">Open this select menu</option>
+                                           <option value="1" {% if employee_data.Gender == "1" %}selected{% endif %} >O+</option>
+                                           <option value="2"{% if employee_data.Gender == "1" %}selected{% endif %}>O-</option>
+                                           <option value="3"{% if employee_data.Gender == "2" %}selected{% endif %}>A+</option>
+                                           <option value="4"{% if employee_data.Gender == "3" %}selected{% endif %}>A-</option>
+                                           <option value="6"{% if employee_data.Gender == "4" %}selected{% endif %}>B+</option>
+                                           <option value="7"{% if employee_data.Gender == "5" %}selected{% endif %}>B-</option>
+                                           <option value="8"{% if employee_data.Gender == "6" %}selected{% endif %}>AB+</option>
+                                           <option value="9"{% if employee_data.Gender == "7" %}selected{% endif %}>AB-</option>
+                                       </select>
+                                   </div>
+                                   <div class="bi-box-1">
+                                        <h5 class="bi-headings">Branch</h5>
+                                        <select class="form-select custom-select mt-3 ml-2 required-field" id="Branch_select_in" name="Branch_select_in" value="{{ employee_data.Branch}}" aria-label="Default select example" required>
+                                           <option value="">Open this select menu</option>
+                                           <option value="1" {% if employee_data.Gender == "1" %}selected{% endif %}>Coimbatore</option>
+                                           <option value="2" {% if employee_data.Gender == "2" %}selected{% endif %}>Chennai</option>
+                                       </select>
+                                   </div>
+                                   <div class="bi-box-1">
+                                        <h5 class="bi-headings">Department</h5>
+                                        <select class="form-select custom-select mt-3 ml-2 required-field" id="Department_select_in" name="Department_select_in" aria-label="Default select example" required>
+                                           <option value="">Open this select menu</option>
+                                           {% for department in departmentlist%}
+                                           <option value="{{ department.id }}" 
+                                               {% if employee_data.Department == department.id %}selected{% endif %}>
+                                               {{ department.Department_name }}
+                                           </option>
+                                           {% endfor %}
+                                       </select>
+                                   </div>
+                                   <div class="bi-box-1">
+                                        <h5 class="bi-headings">Designation</h5>
+                                        <select class="form-select custom-select mt-3 ml-2 required-field" id="Designation_select_in" name="Designation_select_in" aria-label="Default select example" required>
+                                           <option class="required-field" value="">Open this select menu</option>
+                                           {% for designation in designationlist %}
+                                           <option value="{{ designation.id }}" 
+                                               {% if employee_data.Designation == designation.id %}selected{% endif %}>
+                                               {{ designation.Designation_name }}
+                                           </option>
+                                           {% endfor %}
+                                       </select>
+                                   </div>
+                                   <div class="bi-box-1">
+                                        <h5 class="bi-headings">Personal Admin</h5> 
+                                        <select class="form-select custom-select mt-3 ml-2" id="Personal_Admin_in" name="Personal_Admin_in" value="{{ employee_data.Personal_Admin}}" aria-label="Default select example">
+                                           <option value="">Open this select menu</option>
+                                           <option value="1"></option>...
+                                           <option value="2">...</option>
+                                           <option value="2">...</option>
+                                       </select>
+                                   </div>
+                                   <div class="bi-box-1">
+                                        <h5 class="bi-headings">Date of Joining</h5>
+                                        <input type="date" class="form-control date-input bi-box-in mt-1 ml-2 required-field" name="Date_of_Joining_in" id="Date_of_Joining_in" value="{{ employee_data.Date_of_Joining}}" placeholder="" required>
+                                   </div>
+                               </div>
+                               
+                               
+                               <div class="BI-BOX-2 col ml-5 mt-2">
+                                   <div class="bi-box-2">
+                                       <h5 class="bi-headings">Qualification</h5> 
+                                       <select class="form-select custom-select mt-3 ml-2 bi-box-in required-field" id="Qualification_select_in" name="Qualification_select_in" value="{{ employee_data.Qualification}}" aria-label="Default select example" required> 
+                                           <option value="">Open this select menu</option>
+                                           <option value="1" {% if employee_data.Gender == "1" %}selected{% endif %}>+2 Graduate</option>
+                                           <option value="2" {% if employee_data.Gender == "2" %}selected{% endif %}>Under Graduate</option>
+                                           <option value="3" {% if employee_data.Gender == "3" %}selected{% endif %}>Post Graduate</option>
+                                           <option value="4" {% if employee_data.Gender == "4" %}selected{% endif %}>Graduate</option>
+                                       </select>
+                                   </div>
+                                   <div class="bi-box-2">
+                                       <h5 class="bi-headings">Degree</h5> 
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" value="{{ employee_data.Degree }}" name="Degree_in" id="Degree_in"  placeholder="Enter Degree" required>
+                                   </div>
+                                   <div class="bi-box-2">
+                                       <h5 class="bi-headings">Email Id</h5> 
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Email_Id_in" id="Email_Id_in" placeholder="Enter Email" value="{{ employee_data.Email_Id}}" required>
+                                   </div>
+                                   <div class="bi-box-2">
+                                       <h5 class="bi-headings">Mobile Number</h5> 
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Mobile_Number_in" id="Mobile_Number_in" value="{{ employee_data.Mobile_Number}}" placeholder="Enter Mobile Number" required>
+                                   </div>
+                                   <div class="bi-box-2">
+                                       <h5 class="bi-headings">Current Address</h5>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" id="Current_Address_in" name="Current_Address_in" value="{{ employee_data.Current_Address}}" placeholder="Enter current address" required>
+                                   </div>
+                                   
+                                   <div class="form-check mt-3 ml-2 mb-3">
+                                       <input type="checkbox" class="form-check-input bi-box-in" id="Same_Address_in" name="Same_Address_in" onchange="toggleSync()">
+                                       <label class="form-check-label" for="Same_Address_in" >Same as Current Address</label>
+                                   </div>
+                                   
+                                   <div class="bi-box-2">
+                                       <h5 class="bi-headings">Permanent Address</h5>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" id="Permanent_Address_in" name="Permanent_Address_in" value="{{ employee_data.Permanent_Address}}" placeholder="Enter permanent address" required>
+                                   </div>
+                                   <div class="bi-box-2">
+                                       <h5 class="bi-headings">Employee Image</h5>
+                                       <input type="file" class="bi-box-in mt-2 ml-2" id="Employee_Image_in" name="Employee_Image_in" accept="image/*" onchange="previewImage(event)">
+                                   </div>
+                                   
+                                   <div class="bi-box-2">
+                                       <h5 class="bi-headings">Selected Image Preview:</h5>
+                                       <img id="imagePreview1" name="imagePreview1" class="bi-box-in mt-2 ml-2" src="{% static 'Static-Images/default-img.png' %}" value="{{ employee_data.Employee_Image}}" alt="Your Image" style="max-width: 250px;">
+                                   </div>
+                               </div>
+                               
+   
+                               <div class="col BI-BOX-3 ml-5 mt-2">
+                                   <div class="bi-box-3">
+                                       <h5 class="bi-headings">Aadhar Number</h5> 
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Aadhaar_Number_in" id="Aadhaar_Number_in" value="{{ employee_data.Aadhaar_Number}}" placeholder="Enter Aadhar Numbar" required>
+                                   </div>
+                                   <div class="bi-box-3">
+                                       <h5 class="bi-headings">Punching Machine Code</h5> 
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in" name="Punching_Machine_Code_in" id="Punching_Machine_Code_in" value="{{ employee_data.Punching_Machine_Code}}" placeholder="Enter Punching Machine Code">
+                                    </div>
+                                   <div class="bi-box-3">
+                                       <h5 class="bi-headings">PAN No</h5> 
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="PAN_No_in" id="PAN_No_in" value="{{ employee_data.PAN_No}}" placeholder="Enter PAN No" required>
+                                    </div>
+                                   <div class="bi-box-3">
+                                       <h5 class="bi-headings">EPF No</h5> 
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in" name="EPF_No_in" id="EPF_No_in" value="{{ employee_data.EPF_No}}" placeholder="Enter EPF No">
+                                    </div>
+                                   <div class="bi-box-3">
+                                       <h5 class="bi-headings">ESI No</h5> 
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in" name="ESI_No_in" id="ESI_No_in" value="{{ employee_data.ESI_No}}" placeholder="Enter ESI No">
+                                    </div>
+                                   <div class="bi-box-3">
+                                       <h5 class="bi-headings">Target</h5> 
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in" name="Target_in" id="Target_in" value="{{ employee_data.Target}}" placeholder="Enter Target">
+                                    </div>
+                                    <div class="bi-box-3">
+                                       <h5 class="bi-headings">Employee Signature</h5>
+                                       <input type="file" class="bi-box-in mt-2 ml-2" id="Employee_Signature_in" name="Employee_Signature_in" value="{{ employee_data.Employee_Signature}}" accept="image/*" onchange="previewImage(event)">
+                                   </div>
+                                   
+                                   <div class="bi-box-3">
+                                       <h5 class="bi-headings">Selected Signature Preview:</h5>
+                                       <img id="imagePreview2" name="imagePreview2" class="bi-box-in mt-2 ml-2" src="{% static 'Static-Images/default-img.png' %}" alt="Your Signature" style="max-width: 250px;">
+                                   </div>
+                               </div>	
+                           </div>
+                       </div>	
+                       
+                       
+                       <div>
+                           <div class="collapse-header2 text-primary d-flex flex-row justify-content-between" data-bs-toggle="collapse" href="#employeeCDCollapse" aria-expanded="true" aria-controls="employeeCDCollapse">
+                               <h3 class="text-primary credientials_details mt-3">CREDIENTIAL DETAILS</h3>
+                               <span class="toggle-icon" id="toggle-icon">&#x2227;</span> <!-- Unicode for V-shaped up arrow -->
+                           </div>
+                           <div>
+                               <div class="row pt-3 collapse show" id="employeeCDCollapse">
+                                   <div class="cid-box-1 col">
+                                       <h5 class="bi-headings">User Menu Permission</h5>
+                                       <select class="form-select custom-select mt-3 ml-2 bi-box-in" id="User_Menu_Permission_select_in" name="User_Menu_Permission_select_in" value="{{ employee_data.User_Menu_Permission}}" aria-label="Default select example">
+                                           <option value="">Open this select menu</option>
+                                           <option value="1">...</option>
+                                           <option value="2">...</option>
+                                           <option value="2">...</option>
+                                           <option value="2">...</option>
+                                           <option value="2">...</option>
+                                       </select>
+                                   </div>
+                                   <div class="cid-box-1 ml-5 col">
+                                       <h5 class="bi-headings">Login Name</h5> 
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in" name="Login_Name_in" id="Login_Name_in" value="{{ employee_data.Login_Name}}" placeholder="Enter Login Name">
+                                   </div>
+                                   <div class="cid-box-1 ml-5 col">
+                                       <h5 class="bi-headings">Password</h5> 
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in" name="Password_in" id="Password_in" value="{{ employee_data.Password}}" placeholder="Enter Password">
+                                   </div>
+                               </div>
+                           </div>	
+                       </div>	
+
+                       <div>
+                           <div class="collapse-header3 text-primary d-flex flex-row justify-content-between" data-bs-toggle="collapse" href="#employeeODCollapse"  aria-expanded="true" aria-controls="employeeODCollapse">
+                               <h3 class="text-primary other_details mt-3">OTHER DETAILS</h3>
+                               <span class="toggle-icon" id="toggle-icon">&#x2227;</span> <!-- Unicode for V-shaped up arrow -->
+                           </div>
+                           <div class="row collapse show" id="employeeODCollapse">
+                               <div class="col OD-BOX pl-3 pt-2">
+                                   <div class="od-box-1">
+                                       <h3 class="bi-headings ">Previous Experience</h3>
+                                       <select class="form-select custom-select mt-3 ml-2 bi-box-in required-field" id="Previous_Experience_in" name="Previous_Experience_in" value="{{ employee_data.Previous_Experience}}" aria-label="Default select example" required>
+                                           <option value="">Open this select menu</option>
+                                           <option value="1"{% if employee_data.Gender == "1" %}selected{% endif %} >Fresher</option>
+                                           <option value="2" {% if employee_data.Gender == "2" %}selected{% endif %}>Experienced</option>
+                                           <option value="3" {% if employee_data.Gender == "3" %}selected{% endif %}>Through Consultant</option>
+                                           <option value="4" {% if employee_data.Gender == "4" %}selected{% endif %}>Contract</option>
+                                       </select>
+                                   </div>
+                                   <div class="od-box-1">
+                                       <h3 class="bi-headings ">Previous Company Name</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Previous_Company_Name_in" id="Previous_Company_Name_in" value="{{ employee_data.Previous_Company_Name}}" placeholder="Enter Previous Company Name" required>
+                                   </div>
+                               </div>
+
+                               <div class="col OD-BOX ml-5 pt-2">
+                                   <div class="od-box-1">
+                                       <h3 class="bi-headings ">Experience in Years</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Experience_In_Years_in" id="Experience_In_Years_in" value="{{ employee_data.Experience_In_Years}}"  placeholder="Enter Experience in Years" required>
+                                   </div>
+                                   <div class="od-box-1">
+                                       <h3 class="bi-headings ">Reference Name</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in" name="Reference_Name_in" id="Reference_Name_in" value="{{ employee_data.Reference_Name}}" placeholder="Reference Name">
+                                   </div>
+                               </div>
+
+                               <div class="col OD-BOX ml-5 pt-2">
+                                   <div class=" colod-box-1">
+                                       <h3 class="bi-headings ">Reference Though</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in" name="Reference_Through_in" id="Reference_Through_in" value="{{ employee_data.Reference_Through}}" placeholder="Enter Reference Though" required>
+                                   </div>
+                               </div>
+                           </div>	
+                       </div>	
+                   
+
+                       <div>
+                           <div class="collapse-header4 text-primary d-flex flex-row justify-content-between" data-bs-toggle="collapse" href="#employeeBDCollapse" aria-expanded="true" aria-controls="employeeBDCollapse">
+                               <h3 class="text-primary bank_details mt-3">BANK DETAILS</h3>
+                               <span class="toggle-icon" id="toggle-icon">&#x2227;</span> <!-- Unicode for V-shaped up arrow -->
+                           </div>
+                           <div class="row collapse show" id="employeeBDCollapse">
+                               <div class="col BD-BOX pl-3 pt-2">
+                                   <div class="bd-box-1">
+                                       <h3 class="bi-headings ">Account Number</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Account_Number_in" id="Account_Number_in" value="{{ employee_data.Account_Number}}" placeholder="Enter Account Numbar" required>
+                                   </div>
+                                   <div class="bd-box-1">
+                                       <h3 class="bi-headings">Bank Name</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Bank_Name_in" id="Bank_Name_in" value="{{ employee_data.Bank_Name}}" placeholder="Enter Bank Name" required>
+                                   </div>
+                               </div>
+                               <div class="col BD-BOX ml-5 pt-2">
+                                   <div class="bd-box-1">
+                                       <h3 class="bi-headings ">Account Holder Name</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Account_Holder_Name_in" id="Account_Holder_Name_in" value="{{ employee_data.Account_Holder_Name}}" placeholder="Enter Account Holder Name" required>
+                                   </div>
+                                   <div class="bd-box-1">
+                                       <h3 class="bi-headings ">Branch Name</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Branch_Name_in" id="Branch_Name_in" value="{{ employee_data.Branch_Name}}" placeholder="Enter Branch Name" required>
+                                   </div>
+                               </div>
+                               <div class="col BD-BOX ml-5 pt-2">
+                                   <div class="bd-box-1">
+                                       <h3 class="bi-headings ">IFSC Code</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="IFSC_Code_in" id="IFSC_Code_in" value="{{ employee_data.IFSC_Code}}" placeholder="Enter IFSC Code" required>
+                                   </div>
+                               </div>
+                           </div>	
+                       </div>
+                       
+                       <div>
+                           <div class="collapse-header5 text-primary d-flex flex-row justify-content-between" data-bs-toggle="collapse" href="#employeeNSDCollapse" aria-expanded="true" aria-controls="employeeNSDCollapse">
+                               <h3 class="text-primary net_salary_details mt-3">NET SALARY DETAILS</h3>
+                               <span class="toggle-icon" id="toggle-icon">&#x2227;</span> <!-- Unicode for V-shaped up arrow -->
+                           </div>
+                           <div class="row collapse show" id="employeeNSDCollapse">
+                               <div class="col NSD-BOX pl-3 pt-2">
+                                   <div class="nsd-box-1">
+                                       <h3 class="bi-headings">Salary Type</h3>
+                                       <select class="form-select custom-select mt-3 ml-2 bi-box-in required-field" id="Salary_Type_select_in" name="Salary_Type_select_in" value="{{ employee_data.Salary_Type_select}}" aria-label="Default select example" required>
+                                           <option value="">Open this select menu</option>
+                                           <option value="1" {% if employee_data.Gender == "1" %}selected{% endif %}>Daily</option>
+                                           <option value="2" {% if employee_data.Gender == "2" %}selected{% endif %}>Weekly</option>
+                                           <option value="3" {% if employee_data.Gender == "3" %}selected{% endif %}>Monthly</option>
+                                       </select>
+                                   </div>
+                                   <div class="nsd-box-1">
+                                       <h3 class="bi-headings">Working Hours</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Working_Hours_in" id="Working_Hours_in" value="{{ employee_data.Working_Hours}}" placeholder="Enter Working Hours" required>
+                                   </div>
+                                   <div class="nsd-box-1">
+                                       <h3 class="bi-headings">Casual Leave Per Month</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Casual_Leave_Per_Month_in" id="Casual_Leave_Per_Month_in" value="{{ employee_data.Casual_Leave_Per_Month}}" placeholder="Enter Casual Leave" required>
+                                   </div>
+                                   <div class="nsd-box-1">
+                                       <h3 class="bi-headings">Sick Leave Per Month</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Sick_Leave_Per_Month_in" id="Sick_Leave_Per_Month_in" value="{{ employee_data.Sick_Leave_Per_Month}}" placeholder="Enter Sick Leave" required>
+                                   </div>
+                                   <div class="nsd-box-1">
+                                       <h3 class="bi-headings">Over Time Amount Per Hour</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Over_Time_Amount_Per_Hour_in" id="Over_Time_Amount_Per_Hour_in" value="{{ employee_data.Over_Time_Amount_Per_Hour}}" placeholder="Enter Over Time Amount" required>
+                                   </div>
+                                   <div class="nsd-box-1">
+                                       <h3 class="bi-headings">Loss of Pay Per Day</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Loss_of_Pay_Per_Day_in" id="Loss_of_Pay_Per_Day_in" value="{{ employee_data.Loss_of_Pay_Per_Day}}" placeholder="Enter Loss of Pay" required>
+                                   </div>
+                               </div>
+                           
+                               <!-- Row 2 -->
+                               <div class="col NSD-BOX ml-5 pt-2">
+                                   <div class="nsd-box-2">
+                                       <h3 class="bi-headings">Permission Amount Per Hour</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Permission_Amount_Per_Hour_in" id="Permission_Amount_Per_Hour_in" value="{{ employee_data.Permission_Amount_Per_Hour}}" placeholder="Enter Permission Amount" required>
+                                   </div>
+                                   <div class="nsd-box-2">
+                                       <h3 class="bi-headings">Basic Pay</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Basic_Pay_in" id="Basic_Pay_in" placeholder="Enter Basic Pay" value="{{ employee_data.Basic_Pay}}" oninput="calculateNetSalary()" required>
+                                   </div>
+                                   <div class="nsd-box-2">
+                                       <h3 class="bi-headings">HRA</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="HRA_in" id="HRA_in" placeholder="Enter HRA" value="{{ employee_data.HRA}}" oninput="calculateNetSalary()" required>
+                                   </div>
+                                   <div class="nsd-box-2">
+                                       <h3 class="bi-headings">Medical Allowance</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="_in" id="Medical_Allowance_in" value="{{ employee_data.Medical_Allowance}}" placeholder="Enter Medical Allowance" oninput="calculateNetSalary()" required>
+                                   </div>
+                                   <div class="nsd-box-2">
+                                       <h3 class="bi-headings">Conveyance Allowance</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Conveyance_Allowance_in" id="Conveyance_Allowance_in" value="{{ employee_data.Conveyance_Allowance}}" placeholder="Enter Conveyance Allowance" oninput="calculateNetSalary()" required>
+                                   </div>
+                                   <div class="nsd-box-2">
+                                       <h3 class="bi-headings">General Allowance</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="General_Allowance_in" id="General_Allowance_in" value="{{ employee_data.General_Allowance}}" placeholder="Enter General Allowance" oninput="calculateNetSalary()" required>
+                                   </div>
+                               </div>
+                           
+                               <!-- Row 3 -->
+                               <div class="col NSD-BOX ml-5 pt-2">
+                                   <div class="nsd-box-3">
+                                       <h3 class="bi-headings">Professional Tax (%)</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Professional_Tax_in" id="Professional_Tax_in" value="{{ employee_data.Professional_Tax}}" placeholder="Enter Professional Tax (%)" oninput="calculateNetSalary()" required>
+                                   </div>
+                                   <div class="nsd-box-3">
+                                       <h3 class="bi-headings">RD (%)</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="RD_in" id="RD_in" placeholder="Enter RD (%)" value="{{ employee_data.RD}}" oninput="calculateNetSalary()" required>
+                                   </div>
+                                   <div class="nsd-box-3">
+                                    <h3 class="bi-headings">PF (%)</h3>
+                                    <input type="text" class="form-control bi-box-in required-field" 
+                                           id="PF_in" name="PF_in" readonly 
+                                           value="{{ employee_data.PF|default:0 }}" 
+                                           placeholder="Enter PF (%)" 
+                                           oninput="calculateNetSalary()" required>
+                                </div>
+                                <div class="nsd-box-3">
+                                    <h3 class="bi-headings">ESI (%)</h3>
+                                    <input type="text" class="form-control bi-box-in required-field" 
+                                           id="ESI_in" name="ESI_in" readonly 
+                                           value="{{ employee_data.ESI|default:0 }}" 
+                                           placeholder="Enter ESI (%)" 
+                                           oninput="calculateNetSalary()" required>
+                                </div>
+                                <div class="nsd-box-3 mt-1"> 
+                                    <input type="checkbox" id="is_employee_salary" name="is_employee_salary" onchange="toggleInputs()">
+                                    <label for="is-employee-salary" class="ml-2">Is Employee Salary</label>
+                                </div>
+                                
+                                   <div class="nsd-box-3">
+                                       <h3 class="bi-headings">Net Salary</h3>
+                                       <input type="text" class="form-control bi-box-in mt-3 ml-2 bi-box-in required-field" name="Net_Salary_in" id="Net_Salary_in" value="{{ employee_data.Net_Salary}}" placeholder="Enter Net Salary" oninput="calculateNetSalary()" required>
+                                   </div>
+                               </div>
+                           </div>	
+                       </div>	                              
+                    </div>
+                   <div class="d-flex flex-row justify-content-end pl-1">
+                       <input type="hidden" id="hiddenemployeeid" name="hiddendemployeeid" value="{{ id }}">
+                       <button class="btn btn-success text-dark pl-3 pr-3 mr-2" type="submit">Save</button>
+                       <button class="btn btn-danger text-dark pl-3 pr-3 mr-2" type="reset">Clear</button>
+                       <button class="btn btn-warning text-dark pl-3 pr-3 mr-4" type="button" onclick="window.location.href='{% url 'Employee_list' %}'">Go to List</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+       <div class="d-flex flex-row textofcopyrights">
+           <h6 class="p-1 mr-5">Copyright © 2023</h6>
+           <h6 class="p-1 ml-5">All rights reserved</h6>
+       </div>
+   </div> 		
+
+
+   <script>
+       var hiddenEmployeeId = document.getElementById('hiddenemployeeid').value;
+
+
+       
+       document.getElementById('sidebarCollapse').addEventListener('click', function() {
+           var sidebar = document.getElementById('sidebar');
+           var header = document.querySelector('.header');
+           
+           // Toggle collapse class
+           sidebar.classList.toggle('collapsed');
+       
+           // Adjust the header margin based on the sidebar state
+           if (sidebar.classList.contains('collapsed')) {
+               header.style.marginLeft = '100px'; // Adjust based on collapsed width
+           } else {
+               header.style.marginLeft = '205px'; // Default expanded margin
+           }
+       });
+   </script>
+
+   <script>
+      
+
+       function toggleSync() {
+           const checkbox = document.getElementById('Same_Address_in');
+           const currentAddress = document.getElementById('Current_Address_in');
+           const permanentAddress = document.getElementById('Permanent_Address_in');
+       
+           if (checkbox.checked) {
+               // Sync permanent address to current address and disable permanent address input
+               permanentAddress.value = currentAddress.value;
+               permanentAddress.disabled = true;
+               permanentAddress.setAttribute('readonly', true);
+       
+               // Set up real-time syncing as the current address is updated
+               currentAddress.addEventListener('input', syncAddresses);
+           } else {
+               // Allow independent editing when unchecked and remove the sync
+               permanentAddress.removeAttribute('readonly');
+               permanentAddress.disabled = false;
+               currentAddress.removeEventListener('input', syncAddresses);  // Remove real-time sync
+           }
+       }
+       
+       function syncAddresses() {
+           const permanentAddress = document.getElementById('Permanent_Address_in');
+           const currentAddress = document.getElementById('Current_Address_in');
+       
+           // Update the permanent address to match the current address
+           permanentAddress.value = currentAddress.value;
+       }
+
+       function previewImage(event) {
+           // Check which input triggered the event
+           const inputId = event.target.id;
+       
+           let imagePreview;
+           if (inputId === 'Employee_Image_in') {
+               imagePreview = document.getElementById('imagePreview1');
+           } else if (inputId === 'Employee_Signature_in') {
+               imagePreview = document.getElementById('imagePreview2');
+           }
+       
+           // Get the value="" file
+           const file = event.target.files[0];
+       
+           if (file && imagePreview) {
+               // Use FileReader to read the file and display the image
+               const reader = new FileReader();
+               reader.onload = function(e) {
+                   imagePreview.src = e.target.result; // Set the preview src to the value="" image file URL
+               }
+               reader.readAsDataURL(file); // Convert the file to a data URL
+           }
+       }
+
+       function toggleInputs() {
+           const isChecked = document.getElementById('is_employee_salary').checked;
+           document.getElementById('PF_in').readOnly = !isChecked;
+           document.getElementById('ESI_in').readOnly = !isChecked;
+           
+           // Optional: Log to console to ensure function is being called
+           console.log('Checkbox checked:', isChecked);
+           console.log('PF readonly:', document.getElementById('PF_in').readOnly);
+           console.log('ESI readonly:', document.getElementById('ESI_in').readOnly);
+       }
+
+       function navigateToPage() {
+           // Replace 'your-page-url.html' with the URL of the page you want to navigate to
+           window.location.href = 'quicklinksemployeelist.html';
+       }
+   </script>
+   
+   <script>
+       function calculateNetSalary() {
+           // Get values of allowances
+           let basicPay = parseFloat(document.getElementById('Basic_Pay_in').value) || 0;
+           let hra = parseFloat(document.getElementById('HRA_in').value) || 0;
+           let medicalAllowance = parseFloat(document.getElementById('Medical_Allowance_in').value) || 0;
+           let conveyanceAllowance = parseFloat(document.getElementById('Conveyance_Allowance_in').value) || 0;
+           let generalAllowance = parseFloat(document.getElementById('General_Allowance_in').value) || 0;
+       
+           // Get values of deductions
+           let professionalTax = parseFloat(document.getElementById('Professional_Tax_in').value) || 0;
+           let rd = parseFloat(document.getElementById('RD_in').value) || 0;
+           let pf = parseFloat(document.getElementById('PF_in').value) || 0;
+           let esi = parseFloat(document.getElementById('ESI_in').value) || 0;
+       
+           // Calculate total allowances and deductions
+           let totalAllowances = basicPay + hra + medicalAllowance + conveyanceAllowance + generalAllowance;
+           let totalDeductions = ((basicPay/100)*professionalTax) + ((basicPay/100)*rd) + ((basicPay/100)*pf) + ((basicPay/100)*esi);
+       
+           // Calculate net salary
+           let netSalary = totalAllowances - totalDeductions;
+       
+           // Update the Net Salary field
+           document.getElementById('Net_Salary_in').value = netSalary.toFixed(2);
+       }
+
+       document.getElementById('employee_form').addEventListener('submit', function (event) {
+           let requiredFields = document.querySelectorAll('.required-field');
+           let formValid = true;
+           
+           requiredFields.forEach(function(field) {
+               if (field.tagName === 'SELECT' && field.value === '') {
+                   field.style.borderColor = 'red'; // For select fields
+                   formValid = false;
+               } else if (field.value === '') {
+                   field.style.borderColor = 'red'; // For input fields
+                   formValid = false;
+               } else {
+                   field.style.borderColor = ''; // Remove red if filled
+               }
+           });
+       
+       });
+   </script>
+   <script>
+       // Toggle the arrow on collapse
+       var collapseHeader = document.querySelector('.collapse-header');
+       var collapseHeader = document.querySelector('.collapse-header2');
+       var collapseHeader = document.querySelector('.collapse-header3');
+       var collapseHeader = document.querySelector('.collapse-header4');
+       var collapseHeader = document.querySelector('.collapse-header5');
+       var collapseContent = document.getElementById('employeeBICollapse');
+       var collapseContent = document.getElementById('employeeCDCollapse');
+       var collapseContent = document.getElementById('employeeODCollapse');
+       var collapseContent = document.getElementById('employeeBDCollapse');
+       var collapseContent = document.getElementById('employeeNSDCollapse');
+       
+       collapseContent.addEventListener('shown.bs.collapse', function () {
+           document.querySelector('.toggle-icon').innerHTML = '&#x2227;'; // Up arrow (V-shape) when open
+       });
+       collapseContent.addEventListener('hidden.bs.collapse', function () {
+           document.querySelector('.toggle-icon').innerHTML = '&#x2228;'; // Down arrow (reverse-V) when collapsed
+       });
+
+       function editButton(){
+           alert(editButton)
+           $.ajax({
+               url: http://127.0.0.1:8000/api/Employee/?employeeID=${$('#hiddenemployeeid').val()},
+               type: 'GET',
+               success: function(response) {
+                   console.log(response);
+                   location.reload(); 
+               },
+               error: function(xhr, status, error) {
+                   console.log('Error:', error);
+                   alert('To delete this Employee, Delete the corresponding instance which is associated with this employee.');
+             }
+          });
+       }
+           
+
+       function deleteButton(deleteButton) {
+           alert(deleteButton);
+           if (confirm("Are you sure you want to delete this employee?")) {
+              $.ajax({
+                 url: http://127.0.0.1:8001/front/delete_employee/?employeeid=${deleteButton},
+                 type: 'GET',
+                 success: function(response) {
+                       alert(response.message);
+                       location.reload();
+                 },
+                 error: function(xhr, status, error) {
+                       console.log('Error:', error);
+                       alert('To delete this Employee, Delete the corresponding instance which is associated with this employee.');
+                 }
+              });
+           }
+       }
+       
+
+   </script>
+       
+
+
+</body>
+</html>

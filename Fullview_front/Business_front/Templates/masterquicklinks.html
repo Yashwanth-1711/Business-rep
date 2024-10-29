@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'quicklinksstyle.css' %}">
+    <title>Master</title>
+    <style>
+        .searchbar {
+            width: 25%; /* Adjust as needed */
+        }
+        .table .quicklinktext {
+            display: block;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    {% include "Home.html" %}    
+    <div class="shadow header">
+        <div class="p-3 table">
+            <div class="d-flex flex-row justify-content-between pl-3 pt-3">
+                <h2 class="quicklinkheading">Quick Links</h2>
+                <input type="text" class="form-control searchbar" id="menuSearch" placeholder="Search Menu" title="Menu Name" oninput="searchFunction()">
+            </div>
+            <div id="results">
+            	<div class="row pt-5 pl-1 ml-2">
+	                <div class="col mt-1" id="Country_Menu" name="Country_Menu">
+	                    <a class="quicklinktext a-highlight" href="{% url 'Country' %}">
+	                        <img src="{% static 'Static-Images/Country-img.png' %}" class="quicklinklogo mr-2 mb-1"/>
+	                        Country
+	                    </a>
+	                </div>
+	                <div class="col" id="State_Menu" name="State_Menu">
+	                    <a class="quicklinktext a-highlight" href="{% url 'State' %}">
+	                        <img src="{% static 'Static-Images/State-img.png' %}" class="quicklinklogo mr-2 mb-1"/>
+	                        State
+	                    </a>
+	                </div>
+	                <div class="col" id="City_Menu" name="City_Menu">
+	                    <a class="quicklinktext a-highlight" href="{% url 'City' %}">
+	                        <img src="{% static 'Static-Images/City-img.png' %}" class="quicklinklogo mr-2 mb-1"/>
+	                        City
+	                    </a>
+	                </div>
+	                <div class="col" id="Area_Menu" name="Area_Menu">
+	                    <a class="quicklinktext a-highlight" href="{% url 'Area' %}">
+	                        <img src="{% static 'Static-Images/Area-img.png' %}" class="quicklinklogo mr-2 mb-1"/>
+	                        Area
+	                    </a>
+	                </div>
+	                <div class="col" id="Department_Menu" name="Department_Menu">
+	                    <a class="quicklinktext a-highlight" href="{% url 'Department' %}">
+	                        <img src="{% static 'Static-Images/Department-img.png' %}" class="quicklinklogo mr-2 mb-1"/>
+	                        Department
+	                    </a>
+	                </div>
+                </div>
+	            <div class="row pt-5 pl-1 ml-2 pb-5" id="Designation_Menu" name="Designation_Menu">
+	                <div class="col">
+	                    <a class="quicklinktext a-highlight" href="{% url 'Designation' %}">
+	                        <img src="{% static 'Static-Images/Designation-img.png' %}" class="quicklinklogo mr-2"/>
+	                        Designation
+	                    </a>
+	                </div>
+	                <div class="col" id="Employee_Menu" name="Employee_Menu">
+	                    <a class="quicklinktext a-highlight" href="{% url 'Employee' %}">
+	                        <img src="{% static 'Static-Images/Employee-img.png' %}" class="quicklinklogo mr-2"/>
+	                        Employee
+	                    </a>
+	                </div>
+	                <div class="col" id="Employee_List_Menu" name="Employee_List_Menu">
+	                    <a class="quicklinktext a-highlight" href="{% url 'Employee_list' %}">
+	                        <img src="{% static 'Static-Images/EmployeeList-img.png' %}" class="quicklinklogo mr-2"/>
+	                        Employee List
+	                    </a>
+	                </div>
+	                <div class="col" id="Ledger_Menu" name="Ledger_Menu">
+	                    <a class="quicklinktext a-highlight ml-2"href="">
+	                        <img src="{% static 'Static-Images/Ledger-img.png' %}" class="quicklinklogo mr-2"/>
+	                        Ledger
+	                    </a>
+	                </div>
+	                <div class="col" id="Ledger_List_Menu" name="Ledger_List_Menu">
+	                    <a class="quicklinktext a-highlight" href="">
+	                        <img src="{% static 'Static-Images/LedgerList-img.png' %}" class="quicklinklogo mr-2"/>
+	                        Ledger List
+	                    </a>
+	                </div>
+	            </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-row justify-content-start textofcopyrights">
+        <h6 class="p-1 mr-3">Copyright © 2023</h6>
+        <h6 class="p-1">All rights reserved</h6>
+    </div>
+    
+	<script>
+		document.getElementById('sidebarCollapse').addEventListener('click', function() {
+			var sidebar = document.getElementById('sidebar');
+			var header = document.querySelector('.header');
+			
+			// Toggle collapse class
+			sidebar.classList.toggle('collapsed');
+		
+			// Adjust the header margin based on the sidebar state
+			if (sidebar.classList.contains('collapsed')) {
+				header.style.marginLeft = '100px'; // Adjust based on collapsed width
+			} else {
+				header.style.marginLeft = '205px'; // Default expanded margin
+			}
+		});
+	</script>
+
+    <script>
+        function searchFunction() {
+            // Get the input field and its value
+            var input = document.getElementById("menuSearch");
+            var filter = input.value.toLowerCase();
+
+            // Get all the links in the results div
+            var links = document.getElementById("results").getElementsByTagName("a");
+
+            // Loop through all links and hide those that don't match the search query
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i];
+                if (link.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                    link.style.display = "";
+                } else {
+                    link.style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>

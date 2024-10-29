@@ -1,0 +1,333 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'humanresoursesattendance.css' %}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <title>Attendance</title>
+    <style>
+        .text-present {
+            color: #28a745;
+        }
+
+        .text-absent {
+            color: #dc3545;
+        }
+
+        .text-sick {
+            color: #ffc107;
+        }
+
+        .text-casual {
+            color: orange;
+        }
+
+        .text-na {
+            color: gray;
+        }
+
+        .btn-orange {
+            background-color: orange;
+            color: white;
+        }
+
+        .status-cell {
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    {% include "Home.html" %}
+    <div class="header">
+        <div>
+            <div class="mt-4 text-center">
+                {% for message in messages %}
+                <div>{{ message }}</div>
+                {% endfor %}
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="d-flex flex-row p-3">
+                    <div class="bi-box-1 ml-3">
+                        <h5 class="bi-headings">Attendance Date</h5>
+                        <input type="date" class="form-control bi-box-in mt-3 ml-2" name="Attendance_Date_in" id="Attendance_Date_in" value="" onchange="filterAttendanceByDate()">
+                    </div>
+                    <div class="bi-box-select Apply">
+                        <h5 class="bi-headings">Apply to all</h5>
+                        <div class="d-flex flex-row">
+                            <select class="form-select custom-select mt-2 ml-2 bi-box-in" id="Attendance_select_in" name="Attendance_select_in" aria-label="Default select example">
+                                <option value="">Open this select menu</option>
+                                <option value="1">Present</option>
+                                <option value="2">Absent</option>
+                                <option value="3">Sick Leave</option>
+                                <option value="4">Casual Leave</option>
+                                <option value="5">Rollback</option>
+                            </select>
+                            <button class="button text-dark text-center btn-success mt-2 pt-0" type="button" id="applyAttendanceButton">Apply</button>
+                            <input type="text" id="hiddenattendanceid" name="hiddenattendanceid" value="" >
+                        </div>
+                    </div>
+                </div>
+
+                <h5 class="bi-headings p-4">ADD DAILY ATTENDANCE</h5>
+                <table class="table table-bordered table-striped" id="attendance-table">
+                    <thead class="table-dark">
+                        <tr class="text-head">
+                            <th class="checkbox-column text-center">
+                                <input type="checkbox" id="masterCheckbox">
+                            </th>
+                            <th class="S-no-column text-center">S.No</th>
+                            <th class="employee-name-column text-center">EMPLOYEE NAME</th>
+                            <th class="normal-column text-center">WORKING HRS</th>
+                            <th class="CL-column text-center">CL</th>
+                            <th class="SL-column text-center">SL</th>
+                            <th class="status-column text-center">STATUS</th>
+                            <th class="actions-column text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        {% for employee in employeelist %}
+                        <tr data-employee-id="{{ employee.id }}" data-attendance-date="{{ employee.Attendance.attendance_date|date:'Y-m-d' }}">
+                            <td><input type="checkbox" class="bodyCheckbox" data-employee-id="{{ employee.id }}"></td>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ employee.Employee_name }}</td>
+                            <td>{{ employee.Working_Hours }}</td>
+                            <td class="leave-remaining cl" data-remaining="{{ employee.Casual_Leave_Per_Month }}" data-used="0">
+                                {{ employee.Casual_Leave_Per_Month }} <br> Used: <span class="used-leave">0</span>
+                            </td>
+                            <td class="leave-remaining sl" data-remaining="{{ employee.Sick_Leave_Per_Month }}" data-used="0">
+                                {{ employee.Sick_Leave_Per_Month }} <br> Used: <span class="used-leave">0</span>
+                            </td>
+                            <td class="status-cell" id="attendance_status_in">
+                                {% for attendance in Attendancelist %}
+                                    {% if attendance.employee == employee.id %}
+                                        {{ attendance.Attendance_status }}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            
+                            <td class="actions-cell">
+                                <button class="btn btn-sm btn-success action-button" data-status="present" onclick="editButton({{employee.id}})">Present</button>
+                                <button class="btn btn-sm btn-danger action-button" data-status="absent" onclick="editButton({{employee.id}})">Absent</button>
+                                <button class="btn btn-sm btn-warning action-button" data-status="sick_leave" onclick="editButton({{employee.id}})">Sick Leave</button>
+                                <button class="btn btn-sm btn-orange action-button" data-status="casual_leave" onclick="editButton({{employee.id}})">Casual Leave</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+
+    <div class="d-flex flex-row justify-content-start textofcopyrights">
+        <h6 class="p-1 mr-3">Copyright © 2023</h6>
+        <h6 class="p-1">All rights reserved</h6>
+    </div>
+
+
+    <script>
+        document.getElementById('sidebarCollapse').addEventListener('click', function() {
+            var sidebar = document.getElementById('sidebar');
+            var header = document.querySelector('.header');
+
+            sidebar.classList.toggle('collapsed');
+            header.style.marginLeft = sidebar.classList.contains('collapsed') ? '100px' : '205px';
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#attendance-table').DataTable();
+        
+            // Set today's date in the date input
+            const today = new Date().toISOString().split('T')[0];
+            $('#Attendance_Date_in').val(today);
+            console.log("the date:", $("#Attendance_Date_in").val());
+
+            window.filterAttendanceByDate = function() {
+                const selectedDate = $('#Attendance_Date_in').val();
+                $('#attendance-table-body tr').each(function() {
+                    const attendanceDate = $(this).data('attendance-date');
+    
+                    // Show or hide rows based on the selected date
+                    if (attendanceDate === selectedDate || !selectedDate) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            };
+        
+            // Handle master checkbox
+            $('#masterCheckbox').on('change', function() {
+                $('.bodyCheckbox').prop('checked', this.checked);
+            });
+        
+            // Handle apply attendance button click
+            $('#applyAttendanceButton').on('click', function(event) {
+                event.preventDefault();
+                const attendanceDate = $('#Attendance_Date_in').val();
+                const attendanceStatus = $('#Attendance_select_in').val();
+                let employeeIds = [];
+            
+                $('.bodyCheckbox:checked').each(function() {
+                    employeeIds.push($(this).data('employee-id'));
+                });
+            
+                if (!attendanceStatus) {
+                    alert('Please select an attendance status.');
+                    return;
+                }
+            
+                if (employeeIds.length === 0) {
+                    alert('Please select at least one employee.');
+                    return;
+                }
+            
+                // AJAX POST request to send data to the backend
+                employeeIds.forEach(function(employeeId) {
+                    const data = {
+                        Attendance_Date_in: attendanceDate,
+                        Attendance_select_in: attendanceStatus,
+                        employee_ids: [employeeId]
+                    };
+            
+                    $.ajax({
+                        type: 'POST',
+                        url: 'http://127.0.0.1:8001/front/createattendance/',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data),
+                        success: function(response) {
+                            alert('Successfully added the attendance')
+                            location.reload();
+                            const statusText = statusMapping[attendanceStatus]; // Map attendance status
+                            const statusClass = getStatusClass(attendanceStatus); // Get the corresponding class
+                            const row = $(`tr[data-employee-id="${employeeId}"]`); // Get the row by employee ID
+                            const statusCell = row.find('.status-cell'); // Get the status cell in the row
+                            // Update the status cell
+                            statusCell.text(statusText).removeClass().addClass(`status-cell ${statusClass}`); // Update text and class
+                            updateActionButtons(row, attendanceStatus); // Update action buttons
+                        },
+                        error: function(xhr) {
+                            const errorMessage = xhr.responseJSON ? xhr.responseJSON.error : 'An error occurred';
+                            $('.mt-4.text-center').append(`<div>${errorMessage}</div>`);
+                        }
+                    });
+                });
+            });
+        
+            // Handle individual action buttons for each employee row
+            $('.action-button').on('click', function(event) {
+                event.preventDefault();
+                const clickedStatus = $(this).data('status');
+                const row = $(this).closest('tr');
+                const statusCell = row.find('.status-cell');
+        
+                // Update the status and the buttons based on the clicked button
+                switch (clickedStatus) {
+                    case 'present':
+                        statusCell.text('Present').removeClass().addClass('status-cell text-present');
+                        updateActionButtons(row, 'present');
+                        break;
+                    case 'absent':
+                        statusCell.text('Absent').removeClass().addClass('status-cell text-absent');
+                        updateActionButtons(row, 'absent');
+                        break;
+                    case 'sick_leave':
+                        statusCell.text('Sick Leave').removeClass().addClass('status-cell text-sick');
+                        updateActionButtons(row, 'sick_leave');
+                        break;
+                    case 'casual_leave':
+                        statusCell.text('Casual Leave').removeClass().addClass('status-cell text-casual');
+                        updateActionButtons(row, 'casual_leave');
+                        break;
+                }
+            });
+        
+            // Function to update action buttons based on current status
+            function updateActionButtons(row, status) {
+                const actionsCell = row.find('.actions-cell');
+                actionsCell.empty(); // Clear current buttons
+        
+                // Add buttons based on the status
+                switch (status) {
+                    case 'present':
+                        actionsCell.append('<button class="btn btn-sm btn-danger action-button" data-status="absent">Absent</button>' +
+                                           '<button class="btn btn-sm btn-warning action-button" data-status="sick_leave">Sick Leave</button>' +
+                                           '<button class="btn btn-sm btn-orange action-button" data-status="casual_leave">Casual Leave</button>');
+                        break;
+                    case 'absent':
+                        actionsCell.append('<button class="btn btn-sm btn-success action-button" data-status="present">Present</button>');
+                        break;
+                    case 'sick_leave':
+                        actionsCell.append('<button class="btn btn-sm btn-success action-button" data-status="present">Present</button>');
+                        break;
+                    case 'casual_leave':
+                        actionsCell.append('<button class="btn btn-sm btn-success action-button" data-status="present">Present</button>');
+                        break;
+                }
+        
+                // Re-attach the click event handlers for the newly created buttons
+                actionsCell.find('.action-button').on('click', function(event) {
+                    event.preventDefault();
+                    const clickedStatus = $(this).data('status');
+                    const statusCell = row.find('.status-cell');
+        
+                    // Update the status and the buttons based on the clicked button
+                    switch (clickedStatus) {
+                        case 'present':
+                            statusCell.text('Present').removeClass().addClass('status-cell text-present');
+                            updateActionButtons(row, 'present');
+                            break;
+                        case 'absent':
+                            statusCell.text('Absent').removeClass().addClass('status-cell text-absent');
+                            updateActionButtons(row, 'absent');
+                            break;
+                        case 'sick_leave':
+                            statusCell.text('Sick Leave').removeClass().addClass('status-cell text-sick');
+                            updateActionButtons(row, 'sick_leave');
+                            break;
+                        case 'casual_leave':
+                            statusCell.text('Casual Leave').removeClass().addClass('status-cell text-casual');
+                            updateActionButtons(row, 'casual_leave');
+                            break;
+                    }
+                });
+            }
+        });
+
+        function editButton(attendanceId) {
+            alert(attendanceId);
+            $.ajax({
+                url: `http://127.0.0.1:8001/front/edit_attendance/?attendanceid=${attendanceId}`,
+                type: 'GET',
+                success: function(response) {
+                    if (response.Attendance_status) {
+                        $('#Attendance_Date_in').val(response.Attendance_date);
+                        $('#attendance_status_in').val(response.Attendance_status);
+                        $('#hiddenattendanceid').val(response.id);
+                    } else {
+                        alert('Attendance details could not be loaded.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error:', error);
+                    alert('An error occurred while loading Attendance details.');
+                }
+            });
+        }
+        
+    </script>    
+</body>
+
+</html>
